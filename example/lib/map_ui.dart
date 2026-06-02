@@ -32,9 +32,35 @@ class MapUiBodyState extends State<MapUiBody> {
   MapUiBodyState();
 
   static final CameraPosition _kInitialPosition = const CameraPosition(
-    target: LatLng(-33.852, 151.211),
-    zoom: 11,
+    target: LatLng(20.0, 0.0),
+    zoom: 1.0,
   );
+
+  BitmapDescriptor? _parisPin;
+  BitmapDescriptor? _newYorkPin;
+  BitmapDescriptor? _rioPin;
+  BitmapDescriptor? _dubaiPin;
+  BitmapDescriptor? _agraPin;
+
+  Future<void> _loadCustomPins(BuildContext context) async {
+    if (_parisPin == null) {
+      final ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context);
+      BitmapDescriptor.fromAssetImage(
+              imageConfiguration, 'assets/paris_pin.png')
+          .then((value) => setState(() => _parisPin = value));
+      BitmapDescriptor.fromAssetImage(
+              imageConfiguration, 'assets/new_york_pin.png')
+          .then((value) => setState(() => _newYorkPin = value));
+      BitmapDescriptor.fromAssetImage(imageConfiguration, 'assets/rio_pin.png')
+          .then((value) => setState(() => _rioPin = value));
+      BitmapDescriptor.fromAssetImage(
+              imageConfiguration, 'assets/dubai_pin.png')
+          .then((value) => setState(() => _dubaiPin = value));
+      BitmapDescriptor.fromAssetImage(imageConfiguration, 'assets/agra_pin.png')
+          .then((value) => setState(() => _agraPin = value));
+    }
+  }
 
   CameraPosition _position = _kInitialPosition;
   bool _isMapCreated = false;
@@ -42,7 +68,7 @@ class MapUiBodyState extends State<MapUiBody> {
   bool _compassEnabled = true;
   bool _myLocationButtonEnabled = true;
   MinMaxZoomPreference _minMaxZoomPreference = MinMaxZoomPreference.unbounded;
-  MapType _mapType = MapType.standard;
+  MapType _mapType = MapType.hybridFlyover;
   bool _rotateGesturesEnabled = true;
   bool _scrollGesturesEnabled = true;
   bool _pitchGesturesEnabled = true;
@@ -168,23 +194,74 @@ class MapUiBodyState extends State<MapUiBody> {
 
   @override
   Widget build(BuildContext context) {
+    _loadCustomPins(context);
     final AppleMap appleMap = AppleMap(
-      onMapCreated: onMapCreated,
-      trackingMode: _trackingMode,
-      initialCameraPosition: _kInitialPosition,
-      compassEnabled: _compassEnabled,
-      minMaxZoomPreference: _minMaxZoomPreference,
-      mapType: _mapType,
-      rotateGesturesEnabled: _rotateGesturesEnabled,
-      scrollGesturesEnabled: _scrollGesturesEnabled,
-      pitchGesturesEnabled: _pitchGesturesEnabled,
-      zoomGesturesEnabled: _zoomGesturesEnabled,
-      myLocationEnabled: _myLocationEnabled,
-      myLocationButtonEnabled: _myLocationButtonEnabled,
-      padding: const EdgeInsets.all(10),
-      onCameraMove: _updateCameraPosition,
-    );
-
+        onMapCreated: onMapCreated,
+        trackingMode: _trackingMode,
+        initialCameraPosition: _kInitialPosition,
+        compassEnabled: _compassEnabled,
+        minMaxZoomPreference: _minMaxZoomPreference,
+        mapType: _mapType,
+        rotateGesturesEnabled: _rotateGesturesEnabled,
+        scrollGesturesEnabled: _scrollGesturesEnabled,
+        pitchGesturesEnabled: _pitchGesturesEnabled,
+        zoomGesturesEnabled: _zoomGesturesEnabled,
+        myLocationEnabled: _myLocationEnabled,
+        myLocationButtonEnabled: _myLocationButtonEnabled,
+        padding: const EdgeInsets.all(10),
+        onCameraMove: _updateCameraPosition,
+        annotations: {
+          Annotation(
+            annotationId: AnnotationId('paris'),
+            position: const LatLng(48.8566, 2.3522),
+            icon: _parisPin ?? BitmapDescriptor.defaultAnnotation,
+            anchor: const Offset(0.365, 1.0),
+            infoWindow: const InfoWindow(
+              title: 'Paris',
+              snippet: 'France',
+            ),
+          ),
+          Annotation(
+            annotationId: AnnotationId('new_york'),
+            position: const LatLng(40.7128, -74.0060),
+            icon: _newYorkPin ?? BitmapDescriptor.defaultAnnotation,
+            anchor: const Offset(0.342, 1.0),
+            infoWindow: const InfoWindow(
+              title: 'New York',
+              snippet: 'USA',
+            ),
+          ),
+          Annotation(
+            annotationId: AnnotationId('rio'),
+            position: const LatLng(-22.9068, -43.1729),
+            icon: _rioPin ?? BitmapDescriptor.defaultAnnotation,
+            anchor: const Offset(0.352, 1.0),
+            infoWindow: const InfoWindow(
+              title: 'Rio de Janeiro',
+              snippet: 'Brazil',
+            ),
+          ),
+          Annotation(
+            annotationId: AnnotationId('dubai'),
+            position: const LatLng(25.2048, 55.2708),
+            icon: _dubaiPin ?? BitmapDescriptor.defaultAnnotation,
+            anchor: const Offset(0.347, 1.0),
+            infoWindow: const InfoWindow(
+              title: 'Dubai',
+              snippet: 'UAE',
+            ),
+          ),
+          Annotation(
+            annotationId: AnnotationId('agra'),
+            position: const LatLng(27.1767, 78.0081),
+            icon: _agraPin ?? BitmapDescriptor.defaultAnnotation,
+            anchor: const Offset(0.413, 1.0),
+            infoWindow: const InfoWindow(
+              title: 'Agra',
+              snippet: 'India',
+            ),
+          ),
+        });
     final List<Widget> columnChildren = <Widget>[
       Expanded(child: appleMap),
     ];

@@ -6,20 +6,20 @@ part of apple_maps_flutter;
 
 /// Type of map tiles to display.
 enum MapType {
-  /// Normal tiles (traffic and labels, subtle terrain information).
+  /// The default tile layer (street map).
   standard,
 
-  /// Satellite imaging tiles (aerial photos)
+  /// Satellite imagery of the area.
   satellite,
 
-  /// Hybrid tiles (satellite images with some labels/overlays)
+  /// Satellite imagery of the area with roads and labels.
   hybrid,
 
-  /// Flyover hybrid tiles (satellite images with some labels/overlays, with flyover data where available)
+  /// Satellite imagery of the area with flyover data.
   hybridFlyover,
 
-  /// Terrain tiles (indicates type and height of terrain)
-  terrain,
+  /// Satellite imagery of the area with flyover data, but no labels.
+  satelliteFlyover, // terrain ki jagah
 }
 
 enum TrackingMode {

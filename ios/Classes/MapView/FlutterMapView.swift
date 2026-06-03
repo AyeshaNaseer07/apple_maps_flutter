@@ -23,13 +23,13 @@ class FlutterMapView: MKMapView, UIGestureRecognizerDelegate {
     
     fileprivate let locationManager: CLLocationManager = CLLocationManager()
     
-    let mapTypes: Array<MKMapType> = [
-        MKMapType.standard,
-        MKMapType.satellite,
-        MKMapType.hybrid,
-        MKMapType.hybridFlyover,
-        MKMapType.terrain,
-    ]
+  let mapTypes: Array<MKMapType> = [
+    MKMapType.standard,        // 0
+    MKMapType.satellite,       // 1
+    MKMapType.hybrid,          // 2
+    MKMapType.hybridFlyover,   // 3
+    MKMapType.satelliteFlyover, // 4 — terrain ki jagah
+]
     
     let userTrackingModes: Array<MKUserTrackingMode> = [
         MKUserTrackingMode.none,

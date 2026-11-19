@@ -54,12 +54,21 @@ public class AppleMapController: NSObject, FlutterPlatformView {
         }
     }
     
+    deinit {
+        channel.setMethodCallHandler(nil)
+    }
+
     public func view() -> UIView {
         return contentView
     }
     
     private func setMethodCallHandlers() {
-        channel.setMethodCallHandler({ [unowned self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+        channel.setMethodCallHandler({ [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+            // The controller can be deallocated while a platform message is in flight.
+            guard let self = self else {
+                result(nil)
+                return
+            }
             if let args: Dictionary<String, Any> = call.arguments as? Dictionary<String,Any> {
                 switch(call.method) {
                 case "annotations#update":
